@@ -1,33 +1,18 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import Literal
+import sqlite3
+import uuid
 
-from database import init_db, insert_delivery, get_all_deliveries
+# =============================
+# MODELS
+# =============================
+class LoginModel(BaseModel):
+    email: str
+    password: str
 
-app = FastAPI()
-init_db()
-
-# 🌐 Allow frontend connection (React Vite Dev server)
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# 📊 In-memory mock dashboard data
-dashboard_data = {
-    "total_deliveries": 25,
-    "eco_deliveries": 8,
-    "fuel_saved_liters": 13.4,
-    "co2_reduced_kg": 31.2,
-    "eco_points": 240
-}
-
-# 📦 Delivery data model
 class DeliveryData(BaseModel):
     pickup: str
     dropoff: str
@@ -36,15 +21,47 @@ class DeliveryData(BaseModel):
     packageType: Literal["small", "medium", "large"]
     ecoFriendly: bool
 
-# 🚀 Submit delivery endpoint
+# =============================
+# DATABASE IMPORTS & INIT
+# =============================
+from database import init_db, insert_delivery, get_all_deliveries
+from login_database import init_login_db
+
+# Initialize DBs
+init_db()
+init_login_db()
+
+# =============================
+# FASTAPI APP
+# =============================
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# =============================
+# DASHBOARD MOCK DATA
+# =============================
+dashboard_data = {
+    "total_deliveries": 18,
+    "eco_deliveries": 8,
+    "fuel_saved_liters": 13.4,
+    "co2_reduced_kg": 31.2,
+    "eco_points": 240
+}
+
+# =============================
+# SEND DELIVERY
+# =============================
 @app.post("/submit-delivery")
 def submit_delivery(data: DeliveryData):
-    print("✅ Received Delivery Data:", data.dict())
-    
-    # Save to SQLite DB
     insert_delivery(data)
 
-    # Simulated dashboard metrics update
     dashboard_data["total_deliveries"] += 1
     if data.ecoFriendly:
         dashboard_data["eco_deliveries"] += 1
@@ -60,12 +77,16 @@ def submit_delivery(data: DeliveryData):
         "delivery_group": "cust_1 + cust_2" if data.ecoFriendly else None
     }
 
-# 📊 Dashboard summary endpoint
+# =============================
+# DASHBOARD SUMMARY
+# =============================
 @app.get("/dashboard-summary")
 def get_dashboard_summary():
     return dashboard_data
 
-# 📜 Delivery History endpoint
+# =============================
+# DELIVERY HISTORY
+# =============================
 @app.get("/deliveries")
 def fetch_all_deliveries():
     deliveries = get_all_deliveries()
@@ -82,3 +103,42 @@ def fetch_all_deliveries():
         for d in deliveries
     ]
     return JSONResponse(content=delivery_list)
+
+# =============================
+# LOGIN ROUTE
+# =============================
+@app.post("/login")
+def login(user: LoginModel):
+    conn = sqlite3.connect("users.db")
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM users WHERE email = ?", (user.email,))
+    result = cursor.fetchone()
+
+    if not result:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid email or password"
+        )
+
+    stored_password = result[2]
+
+    if stored_password != user.password:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid email or password"
+        )
+
+    token = "sample-token"
+    return {"token": token}
+
+@app.delete("/delete-delivery/{delivery_id}")
+def delete_delivery(delivery_id: int):
+    conn = sqlite3.connect("deliveries.db")
+    cur = conn.cursor()
+
+    cur.execute("DELETE FROM deliveries WHERE id = ?", (delivery_id,))
+    conn.commit()
+    conn.close()
+
+    return {"status": "success", "message": "Delivery deleted"}

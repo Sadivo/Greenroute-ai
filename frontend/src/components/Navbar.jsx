@@ -1,45 +1,41 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-export default function Navbar() {
+function Navbar() {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
   return (
     <nav style={{
-      background: "#101820FF",
-      color: "#FEE715FF",
-      padding: "1rem 2rem",
       display: "flex",
       justifyContent: "space-between",
       alignItems: "center",
-      boxShadow: "0 2px 4px rgba(0,0,0,0.1)"
+      padding: "12px 25px",
+      background: "#111827",
+      color: "white"
     }}>
-      <h2 style={{ margin: 0, fontWeight: 600, fontSize: "1.4rem" }}>
-        <span role="img" aria-label="leaf">🌿</span> GreenRoute <span style={{ color: "#fff" }}>AI</span>
-      </h2>
-      <div style={{ display: "flex", gap: "1.5rem" }}>
-        <NavLink to="/" label="🏠 Home" />
-        <NavLink to="/delivery" label="📦 Delivery" />
-        <NavLink to="/eco-match" label="🌱 Eco Match" />
-        <NavLink to="/dashboard" label="📊 Dashboard" />
-        <NavLink to="/history" label="📜 History" />
-        <NavLink to="/map" label="🗺️ Map" /> {/* ✅ Final working version */}
+      <h2 style={{ margin: 0, fontWeight: 600 }}>🤖🌱🗺️ GreenRoute AI</h2>
+
+      <div style={{ display: "flex", gap: "12px" }}>
+        
+        <button onClick={() => navigate("/dashboard")}>Dashboard</button>
+        <button onClick={() => navigate("/delivery")}>Delivery</button>
+        <button onClick={() => navigate("/eco-match")}>Eco Match</button>
+        <button onClick={() => navigate("/history")}>History</button>
+        <button onClick={() => navigate("/map")}>Map</button>
+
+        <button 
+          onClick={handleLogout} 
+          style={{ background: "#ef4444", color: "white", borderRadius: "6px" }}
+        >
+          Logout
+        </button>
       </div>
     </nav>
   );
 }
 
-function NavLink({ to, label }) {
-  return (
-    <Link
-      to={to}
-      style={{
-        color: "white",
-        textDecoration: "none",
-        fontWeight: 500,
-        transition: "color 0.3s"
-      }}
-      onMouseEnter={(e) => (e.target.style.color = "#FEE715FF")}
-      onMouseLeave={(e) => (e.target.style.color = "white")}
-    >
-      {label}
-    </Link>
-  );
-}
+export default Navbar;
