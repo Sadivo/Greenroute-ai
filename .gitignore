@@ -19,3 +19,6 @@ Thumbs.db
 !backend/
 !backend/*.py
 !backend/.gitignore
+
+# AI agent specific ignores
+.claude/
