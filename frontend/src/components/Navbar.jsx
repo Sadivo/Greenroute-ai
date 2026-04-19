@@ -21,17 +21,17 @@ function Navbar() {
 
       <div style={{ display: "flex", gap: "12px" }}>
         
-        <button onClick={() => navigate("/dashboard")}>Dashboard</button>
-        <button onClick={() => navigate("/delivery")}>Delivery</button>
-        <button onClick={() => navigate("/eco-match")}>Eco Match</button>
-        <button onClick={() => navigate("/history")}>History</button>
-        <button onClick={() => navigate("/map")}>Map</button>
+        <button onClick={() => navigate("/dashboard")}>儀表板</button>
+        <button onClick={() => navigate("/delivery")}>新增配送</button>
+        <button onClick={() => navigate("/eco-match")}>環保配對</button>
+        <button onClick={() => navigate("/history")}>配送紀錄</button>
+        <button onClick={() => navigate("/map")}>地圖</button>
 
-        <button 
-          onClick={handleLogout} 
+        <button
+          onClick={handleLogout}
           style={{ background: "#ef4444", color: "white", borderRadius: "6px" }}
         >
-          Logout
+          登出
         </button>
       </div>
     </nav>

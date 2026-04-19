@@ -38,8 +38,8 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -118,7 +118,7 @@ def login(user: LoginModel):
     if not result:
         raise HTTPException(
             status_code=401,
-            detail="Invalid email or password"
+            detail="電子郵件或密碼錯誤"
         )
 
     stored_password = result[2]
@@ -126,7 +126,7 @@ def login(user: LoginModel):
     if stored_password != user.password:
         raise HTTPException(
             status_code=401,
-            detail="Invalid email or password"
+            detail="電子郵件或密碼錯誤"
         )
 
     token = "sample-token"

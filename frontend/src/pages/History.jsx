@@ -12,51 +12,51 @@ export default function History() {
 
   const loadData = () => {
     axios
-      .get("http://localhost:8000/deliveries")
+      .get("/deliveries")
       .then((res) => {
         setDeliveries(res.data);
       })
       .catch((err) => {
-        console.error("Failed to load delivery history:", err);
+        console.error("載入配送紀錄失敗：", err);
       });
   };
 
   // DELETE function for a delivery
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm(
-      "Are you sure you want to delete this delivery?"
+      "確定要刪除這筆配送紀錄嗎？"
     );
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(`http://localhost:8000/delete-delivery/${id}`);
+      await axios.delete(`/delete-delivery/${id}`);
 
       // Remove from frontend instantly
       setDeliveries(deliveries.filter((d) => d.id !== id));
     } catch (error) {
       console.error("Delete failed:", error);
-      alert("Failed to delete delivery.");
+      alert("刪除失敗，請稍後再試。");
     }
   };
 
   return (
     <div className="history-container">
-      <h2>📜 Delivery History</h2>
+      <h2>📜 配送紀錄</h2>
 
       {deliveries.length === 0 ? (
-        <p>No deliveries yet.</p>
+        <p>尚無配送紀錄。</p>
       ) : (
         <table className="history-table">
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Pickup</th>
-              <th>Dropoff</th>
-              <th>Date</th>
-              <th>Time</th>
-              <th>Package</th>
-              <th>Eco?</th>
-              <th>Action</th> {/* NEW COLUMN */}
+              <th>編號</th>
+              <th>取貨地點</th>
+              <th>送達地點</th>
+              <th>日期</th>
+              <th>時間</th>
+              <th>包裹大小</th>
+              <th>環保？</th>
+              <th>操作</th>
             </tr>
           </thead>
 
@@ -85,7 +85,7 @@ export default function History() {
                       fontWeight: "600",
                     }}
                   >
-                    Delete
+                    刪除
                   </button>
                 </td>
               </tr>

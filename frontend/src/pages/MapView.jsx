@@ -7,7 +7,7 @@ export default function MapView() {
   const [positions, setPositions] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:8000/deliveries").then(async (res) => {
+    axios.get("/deliveries").then(async (res) => {
       const updated = await fetchCoordinates(res.data);
       setPositions(updated);
     });
@@ -54,7 +54,7 @@ export default function MapView() {
 
   return (
     <div style={{ height: "90vh", padding: "1rem" }}>
-      <h2 style={{ marginBottom: "10px" }}>🗺️ Delivery Route Map</h2>
+      <h2 style={{ marginBottom: "10px" }}>🗺️ 配送路線地圖</h2>
 
       <MapContainer
         center={[19.5, 75.0]} // Center of Maharashtra
@@ -67,12 +67,12 @@ export default function MapView() {
           <div key={d.id}>
             {/* Pickup Marker */}
             <Marker position={d.pickupPos}>
-              <Popup>📦 Pickup: {d.pickup}</Popup>
+              <Popup>📦 取貨：{d.pickup}</Popup>
             </Marker>
 
             {/* Dropoff Marker */}
             <Marker position={d.dropoffPos}>
-              <Popup>📍 Dropoff: {d.dropoff}</Popup>
+              <Popup>📍 送達：{d.dropoff}</Popup>
             </Marker>
 
             {/* Route Line */}

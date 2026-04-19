@@ -4,13 +4,13 @@ function Dashboard() {
   const [summary, setSummary] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:8000/dashboard-summary")
+    fetch("/dashboard-summary")
       .then((res) => res.json())
       .then((data) => setSummary(data));
   }, []);
 
   if (!summary) {
-    return <h2 style={{ textAlign: "center", marginTop: "20vh", color: "white" }}>Loading...</h2>;
+    return <h2 style={{ textAlign: "center", marginTop: "20vh", color: "white" }}>載入中...</h2>;
   }
 
   return (
@@ -20,38 +20,38 @@ function Dashboard() {
       <div style={styles.shape1}></div>
       <div style={styles.shape2}></div>
 
-      <h1 style={styles.title}>📊 GreenRoute AI Dashboard</h1>
-      <p style={styles.subtitle}>Smart, Eco-Efficient Logistics Monitoring</p>
+      <h1 style={styles.title}>📊 GreenRoute AI 儀表板</h1>
+      <p style={styles.subtitle}>智慧環保物流監控中心</p>
 
       <div style={styles.grid}>
-        {/* TOTAL DELIVERIES */}
+        {/* 總配送次數 */}
         <div style={styles.card}>
           <h2 style={styles.cardNumber}>{summary.total_deliveries}</h2>
-          <p style={styles.cardLabel}>Total Deliveries</p>
+          <p style={styles.cardLabel}>總配送次數</p>
         </div>
 
-        {/* ECO DELIVERIES */}
+        {/* 環保配送次數 */}
         <div style={styles.card}>
           <h2 style={styles.cardNumber}>{summary.eco_deliveries}</h2>
-          <p style={styles.cardLabel}>Eco-Friendly Deliveries</p>
+          <p style={styles.cardLabel}>環保配送次數</p>
         </div>
 
-        {/* FUEL SAVED */}
+        {/* 節省燃油 */}
         <div style={styles.card}>
-          <h2 style={styles.cardNumber}>{summary.fuel_saved_liters} L</h2>
-          <p style={styles.cardLabel}>Fuel Saved</p>
+          <h2 style={styles.cardNumber}>{summary.fuel_saved_liters} 公升</h2>
+          <p style={styles.cardLabel}>節省燃油量</p>
         </div>
 
-        {/* CO2 REDUCED */}
+        {/* 減少碳排 */}
         <div style={styles.card}>
-          <h2 style={styles.cardNumber}>{summary.co2_reduced_kg} kg</h2>
-          <p style={styles.cardLabel}>CO₂ Reduced</p>
+          <h2 style={styles.cardNumber}>{summary.co2_reduced_kg} 公斤</h2>
+          <p style={styles.cardLabel}>減少 CO₂ 排放</p>
         </div>
 
-        {/* ECO POINTS */}
+        {/* 環保點數 */}
         <div style={styles.cardLarge}>
           <h2 style={styles.cardNumber}>{summary.eco_points}</h2>
-          <p style={styles.cardLabel}>Eco Points Earned</p>
+          <p style={styles.cardLabel}>累積環保點數</p>
         </div>
       </div>
 

@@ -16,7 +16,7 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    const res = await fetch("http://localhost:8000/login", {
+    const res = await fetch("/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
@@ -28,7 +28,7 @@ function Login() {
       localStorage.setItem("token", data.token);
       navigate("/dashboard");
     } else {
-      setError(data.detail || "Invalid email or password");
+      setError(data.detail || "電子郵件或密碼錯誤");
 
     }
   };
@@ -41,13 +41,13 @@ function Login() {
 
       <div style={styles.card}>
         <h1 style={styles.title}>🌱 GreenRoute AI</h1>
-        <p style={styles.subtitle}>Eco-Smart Logistics Optimization</p>
+        <p style={styles.subtitle}>智慧環保物流優化平台</p>
 
         <form onSubmit={handleLogin} style={styles.form}>
           <div style={styles.inputGroup}>
             <input
               type="email"
-              placeholder="Email Address"
+              placeholder="電子郵件"
               style={styles.input}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -58,7 +58,7 @@ function Login() {
           <div style={styles.inputGroup}>
             <input
               type="password"
-              placeholder="Password"
+              placeholder="密碼"
               style={styles.input}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -67,7 +67,7 @@ function Login() {
           </div>
 
           <button type="submit" style={styles.button}>
-            Sign In
+            登入
           </button>
         </form>
 
